@@ -16,6 +16,11 @@ add_compile_options(
   /openmp 
   /O2
   )
+
+if(MSVC)
+  set(CMAKE_EXE_LINKER_FLAGS
+      "${CMAKE_EXE_LINKER_FLAGS}  /NODEFAULTLIB:LIBCMT")
+endif()
 else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer")
   add_compile_options(

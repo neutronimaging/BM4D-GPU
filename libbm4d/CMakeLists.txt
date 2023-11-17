@@ -11,12 +11,14 @@ include_directories(include)
 
 set(CXX
         src/bm4d.cpp
+        src/bm4d_core.cpp
         )
 
 set(CU  src/kernels.cu)
 
 set(H
         include/bm4d.h
+        include/bm4d_core.h
         include/helper_cuda.h
         include/helper_string.h
         include/kernels.cuh

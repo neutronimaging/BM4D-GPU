@@ -36,17 +36,17 @@ set(LINK_TYPE "MODULE")
 
 message("${TARGET_NAME} ${CMAKE_HOST_SYSTEM_PROCESSOR}")
 
-set_target_properties(${TARGET} PROPERTIES 
-    POSITION_INDEPENDENT_CODE ON
-    CUDA_VISIBILITY_PRESET "hidden"
-    # CUDA_SEPARABLE_COMPILATION ON
-)
+# set_target_properties(${TARGET} PROPERTIES 
+#     POSITION_INDEPENDENT_CODE ON
+#     CUDA_VISIBILITY_PRESET "hidden"
+#     # CUDA_SEPARABLE_COMPILATION ON
+# )
 
 target_link_libraries(${TARGET_NAME}
   PUBLIC
     pybind11::module
     OpenMP::OpenMP_CXX
-    bm4d
+    bm4d-gpu
       )
 
 
