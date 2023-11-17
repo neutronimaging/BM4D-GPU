@@ -2,7 +2,7 @@
 * 2016, Vladislav Tananaev
 * v.d.tananaev [at] gmail [dot] com
 */
-#include <bm4d-gpu/kernels.cuh>
+#include "../include/kernels.cuh"
 
 #include <thrust/device_vector.h>
 #include <thrust/device_ptr.h>

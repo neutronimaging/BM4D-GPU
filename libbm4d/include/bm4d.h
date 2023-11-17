@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 
-#include <bm4d-gpu/parameters.h>
-#include <bm4d-gpu/kernels.cuh>
-#include <bm4d-gpu/stopwatch.hpp>
+#include "parameters.h"
+#include "kernels.cuh"
+#include "stopwatch.hpp"
 
 class BM4D {
  public:

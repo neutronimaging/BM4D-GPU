@@ -3,7 +3,7 @@
  * v.d.tananaev [at] gmail [dot] com
  */
 
-#include <bm4d-gpu/bm4d.h>
+#include "../include/bm4d.h"
 
 std::vector<uchar> BM4D::run_first_step() {
   // Stopwatch copyingtodevice(true);
