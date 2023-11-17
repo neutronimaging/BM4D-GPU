@@ -14,6 +14,11 @@
 #include "kernels.cuh"
 #include "stopwatch.hpp"
 
+typedef uint3float1;
+typedef uint;
+typedef dim3;
+typedef cudaDeviceProp;
+
 class BM4D {
  public:
   BM4D(bm4d_gpu::Parameters p, const std::vector<uchar>& in_noisy_volume, const int& width,
@@ -70,7 +75,7 @@ class BM4D {
 
  private:
   // Main variables
-  std::vector<uchar> noisy_volume;
+  std::vector<unsigned char> noisy_volume;
 
   // Device variables
   float* d_gathered4dstack;

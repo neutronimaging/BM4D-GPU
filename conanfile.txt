@@ -1,0 +1,11 @@
+[requires]
+pybind11/2.10.1
+
+[options]
+
+
+[generators]
+MSBuildDeps
+MSBuildToolchain
+cmake_find_package
+virtualenv

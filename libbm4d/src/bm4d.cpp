@@ -3,6 +3,12 @@
  * v.d.tananaev [at] gmail [dot] com
  */
 
+#include <cmath>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+
 #include "../include/bm4d.h"
 
 std::vector<uchar> BM4D::run_first_step() {
