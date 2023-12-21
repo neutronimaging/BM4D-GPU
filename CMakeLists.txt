@@ -48,6 +48,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 install(FILES 
-
+  pkgfiles/__init__.py
+  pkgfiles/README.md
+  pkgfiles/LICENSE
 
 DESTINATION ${CMAKE_INSTALL_PREFIX}/pybm4d)
