@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
-project(bm4d-gpu)
+
+project(bm4d-gpu LANGUAGES CXX CUDA)
 
 ## Add support for C++17
 set(CMAKE_CXX_STANDARD 17)
@@ -9,18 +10,14 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
 find_package(OpenMP)
 find_package(PythonInterp REQUIRED)
 find_package(pybind11 REQUIRED)
-find_package(CUDA REQUIRED)
+# find_package(CUDA REQUIRED)
 
 if(WIN32)
-add_compile_options(
-  /openmp 
-  /O2
-  )
+# add_compile_options(
+#   /openmp 
+#   /O2
+#   )
 
-if(MSVC)
-  set(CMAKE_EXE_LINKER_FLAGS
-      "${CMAKE_EXE_LINKER_FLAGS}  /NODEFAULTLIB:LIBCMT")
-endif()
 else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer")
   add_compile_options(
@@ -50,4 +47,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/applications)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
+install(FILES 
 
+
+DESTINATION ${CMAKE_INSTALL_PREFIX}/pybm4d)

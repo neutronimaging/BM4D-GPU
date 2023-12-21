@@ -1,75 +1,99 @@
 #include <bm4d.h>
 
+#include <string>
+#include <map>
+#include <vector>
+
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
 #include <pybind11/stl.h>
+
+#include <parameters.h>
 
 namespace py = pybind11;
 
 void bindBM4D(py::module &m)
 {
+    py::class_<BM4D> bm4dClass(m, "BM4D");
 
-//     py::class_<BM4D> issClass(m, "BM4D");
+    bm4dClass.def(py::init());
 
-//     issClass.def(py::init());
+    bm4dClass.def("run",
+                [](BM4D &bm4d,
+                py::array_t<unsigned char> &x,
+                const py::dict &args)
+                {
+                    bm4d_gpu::Parameters p;
+                    std::map<std::string, int> parMap = {{"sim_th", 0},
+                                                         {"hard_th", 1},
+                                                         {"window_size", 2},
+                                                         {"step_size", 3},
+                                                        //  {"patch_size", 4},
+                                                        //  {"maxN", 5}
+                                                         };
 
-//     issClass.def("process",
-//                  [](advancedfilters::ISSfilterQ3Df &iss,
-//                  py::array_t<float> &x,
-//                  double dTau,
-//                  double dLambda,
-//                  double dAlpha,
-//                  int nN,
-//                  bool saveiterations=false,
-//                  std::string itpath="")
-//     {
-//         auto r = x.unchecked<3>(); // x must have ndim = 3; can be non-writeable
+                    for (const auto & item : args)
+                    {
+                        auto key = py::cast<std::string>(item.first);
+                        if (parMap.find(key) != parMap.end())
+                        {
+                            switch (parMap[key])
+                            {
 
-//         py::buffer_info buf1 = x.request();
+                                //{"sim_th",      0},        // Similarity threshold for the first step
+                                case 0:
+                                    p.sim_th = py::cast<float>(item.second);
+                                    break;
+                                // {"hard_th",     1},       // Hard shrinkage threshold
+                                case 1:
+                                    p.hard_th = py::cast<float>(item.second);
+                                    break;  
+                                // {"window_size", 2},   // Search window, barely affects the results [Lebrun M., 2013]
+                                case 2:
+                                    p.window_size = py::cast<int>(item.second);
+                                    break;  
+                                // {"step_size",   3},     // Reasonable values {1,2,3,4}
+                                                    // Significantly (exponentially) affects speed,
+                                                    // slightly affect results
+                                case 3: 
+                                    p.step_size = py::cast<int>(item.second);
+                                    break;
 
-//         std::vector<size_t> dims={  static_cast<size_t>(buf1.shape[2]),
-//                                     static_cast<size_t>(buf1.shape[1]),
-//                                     static_cast<size_t>(buf1.shape[0])};
-//         kipl::base::TImage<float,3> img(static_cast<float*>(buf1.ptr),dims);
+                                // // Fixed in current implementation
+                                // // TODO: check what's up here
+                                // // {"patch_size",  4},  // Patch size
+                                // case 4:
+                                //     p.patch_size = py::cast<int>(item.second);
+                                //     break;
+                                // // {"maxN"      ,  5}};
+                                // case 5:
+                                //     p.maxN = py::cast<int>(item.second);
+                                //     break;
+                            }
+                        }
+                    }
 
-//         iss.process(img,dTau,dLambda,dAlpha,nN,saveiterations,itpath);
+                    py::buffer_info buf1 = x.request();
 
-//         std::copy_n(img.GetDataPtr(),img.Size(),static_cast<float*>(buf1.ptr));
-//     },
-//     "Computes a combined image using the selected method",
-//     py::arg("img"),
-//     py::arg("tau")     = 0.125,
-//     py::arg("plambda") = 1.0,
-//     py::arg("palpha")  = 0.25,
-//     py::arg("N")       = 10,
-//     py::arg("saveIterations") = false,
-//     py::arg("itPath")         = "iteration_####.tif");
+                    if (buf1.format!=py::format_descriptor<unsigned char>::format())
+                        throw std::runtime_error("Incompatible format: expected an unsigned char array!");
 
-//     issClass.def("errors",
-//                  &advancedfilters::ISSfilterQ3Df::errors,
-//                  "Returns a vector with the error of each filter iteration");
-//     issClass.def("entropies",
-//                  &advancedfilters::ISSfilterQ3Df::entropies,
-//                  "Returns a vector with the entropy of each filter iteration");
+                    if (buf1.shape.size() != 3UL)
+                        throw std::runtime_error("Incompatible format: expected a 3D array!");
 
-// //    issClass.def("setNumThreads",
-// //                 &advancedfilters::ISSfilterQ3Df::numThreads,
-// //                 "Sets the number of threads. This should usually not be changed.");
+                    std::vector<size_t> dims={  static_cast<size_t>(buf1.shape[2]),
+                                                static_cast<size_t>(buf1.shape[1]),
+                                                static_cast<size_t>(buf1.shape[0])
+                                             };
 
-//     issClass.def("initialImageType",
-//                  &advancedfilters::ISSfilterQ3Df::initialImageType,
-//                  "Returns the type of the initial image using the eInitialImageType enum.");
+                    py::print(dims[0],dims[1],dims[2]);
 
-//     issClass.def("setInitialImageType",
-//                  &advancedfilters::ISSfilterQ3Df::setInitialImageType,
-//                  "Sets the type of the initial image using the eInitialImageType enum.");
+                    std::vector<unsigned char> vec;
+                    std::copy_n(static_cast<unsigned char*>(buf1.ptr),dims[0]*dims[1]*dims[2],vec.begin()); // data
+                    auto res = bm4d.run(p, vec,dims[0],dims[1],dims[2] );  
 
-//     issClass.def("regularizationType",
-//                  &advancedfilters::ISSfilterQ3Df::regularizationType,
-//                  "Returns the regularization type.");
+                    return res;
+                });
 
-//     issClass.def("setRegularizationType",
-//                  &advancedfilters::ISSfilterQ3Df::setRegularizationType,
-//                  "Sets the regularization type using eRegularizationType enum.");
 
 }

@@ -3,6 +3,7 @@
 # Copyright (c) 2021 ImaginSuite contributors (https://github.com/neutronimaging/imagingsuite)
 # ~~~
 set(TARGET_NAME "pybm4d")
+project(bm4d LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 17)
@@ -24,6 +25,10 @@ set(SRC_FILES
     src/pybinder.cpp
 )
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /NODEFAULTLIB:LIBCMTD.lib")
+
+set(LINK_TYPE "MODULE")
+
 pybind11_add_module(${TARGET_NAME}
   ${LINK_TYPE}
   MODULE
@@ -32,7 +37,8 @@ pybind11_add_module(${TARGET_NAME}
 
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_VISIBILITY_PRESET hidden)
 
-set(LINK_TYPE "MODULE")
+
+
 
 message("${TARGET_NAME} ${CMAKE_HOST_SYSTEM_PROCESSOR}")
 
@@ -45,8 +51,7 @@ message("${TARGET_NAME} ${CMAKE_HOST_SYSTEM_PROCESSOR}")
 target_link_libraries(${TARGET_NAME}
   PUBLIC
     pybind11::module
-    OpenMP::OpenMP_CXX
-    bm4d-gpu
+    libbm4d
       )
 
 
@@ -56,4 +61,4 @@ set_target_properties(${TARGET_NAME}
     SUFFIX "${PYTHON_MODULE_EXTENSION}"
   )
 
-install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/pybm4d)
