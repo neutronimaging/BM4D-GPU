@@ -87,12 +87,14 @@ void bindBM4D(py::module &m)
                                              };
 
                     py::print(dims[0],dims[1],dims[2]);
+                    size_t N = dims[0]*dims[1]*dims[2];
 
-                    std::vector<unsigned char> vec;
-                    std::copy_n(static_cast<unsigned char*>(buf1.ptr),dims[0]*dims[1]*dims[2],vec.begin()); // data
+                    std::vector<unsigned char> vec(N);
+                    std::copy_n(static_cast<unsigned char*>(buf1.ptr),N,vec.begin()); // data
                     auto res = bm4d.run(p, vec,dims[0],dims[1],dims[2] );  
 
-                    return res;
+                    std::copy_n(vec.begin(),N,static_cast<unsigned char*>(buf1.ptr));
+                    return 0;
                 });
 
 

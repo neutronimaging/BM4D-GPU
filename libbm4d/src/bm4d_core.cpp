@@ -46,7 +46,7 @@ std::vector<uchar> BM4D_Core::run_first_step() {
   Stopwatch dct_forward(true);
   run_dct3d(d_gathered4dstack, gather_stacks_sum, params.patch_size, d_prop);
   dct_forward.stop();
-  std::cout << "3D DCT forwars took: " << dct_forward.getSeconds() << std::endl;
+  std::cout << "3D DCT forwards took: " << dct_forward.getSeconds() << std::endl;
   // debug_kernel(d_gathered4dstack);
 
   // Do WHT in 4th dim + Hard Thresholding + IWHT
