@@ -20,6 +20,12 @@ std::vector<unsigned char> BM4D::run(bm4d_gpu::Parameters p,
        delete core;
     }
 
+    if (width*height*depth != in_noisy_volume.size()) 
+    {
+        std::cout << "Error: input volume size does not match width*height*depth" << std::endl;
+        return std::vector<unsigned char>();
+    }
+    
     core = new BM4D_Core(p, in_noisy_volume, width, height, depth) ;
     return core->run_first_step();
 }
